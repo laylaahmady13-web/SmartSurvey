@@ -2,6 +2,22 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #ffe6f0;  /* warna pink lembut */
+    }
+    h1 {
+        color: #b30086;  /* warna header */
+        text-align: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # Konfigurasi halaman
 st.set_page_config(page_title="Smart Survey", layout="wide")
 
