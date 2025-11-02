@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # ====== Tampilan Dasar ======
 st.set_page_config(page_title="SmartSurvey", page_icon="📊", layout="centered")
@@ -50,15 +51,15 @@ if menu == "Home":
         st.subheader("Analisis Cepat (Gratis)")
         st.write("""
         - Upload file CSV kamu  
-        - Dapatkan analisis deskriptif & korelasi sederhana langsung di halaman  
+        - Lihat distribusi jawaban tiap pertanyaan  
         - Cocok untuk uji coba cepat
         """)
 
     with col2:
         st.subheader("Analisis Lengkap (Berbayar)")
         st.write("""
-        - Upload file dan beri keterangan analisis  
-        - Hasil lengkap dikirim ke email (dengan visualisasi & laporan profesional)  
+        - Upload file & beri keterangan analisis  
+        - Hasil lengkap dikirim ke email (visualisasi + laporan profesional)  
         - Termasuk konsultasi hasil
         """)
 
@@ -77,17 +78,33 @@ elif menu == "Analisis Cepat (Gratis)":
         st.write("### 🧾 5 Baris Pertama Data")
         st.dataframe(df.head())
 
-        # Analisis sederhana
         st.write("### 📊 Statistik Deskriptif")
-        st.dataframe(df.describe(include='all'))
+        try:
+            st.dataframe(df.describe(include='all'))
+        except Exception:
+            st.warning("Tidak dapat menampilkan statistik karena format data tidak sesuai.")
 
-        # Korelasi numerik
-        num_df = df.select_dtypes(include=[np.number])
-        if not num_df.empty:
-            st.write("### 🔗 Korelasi antar variabel numerik")
-            st.dataframe(num_df.corr())
-        else:
-            st.info("Tidak ada kolom numerik untuk dihitung korelasinya.")
+        # --- Pilih kolom untuk visualisasi ---
+        st.write("### 🎨 Visualisasi Frekuensi")
+        skip_keywords = ["cap waktu", "timestamp", "nama", "nim", "npm", "email", "usia"]
+        kolom_list = [c for c in df.columns if not any(k.lower() in c.lower() for k in skip_keywords)]
+
+        if not kolom_list:
+            kolom_list = df.columns.tolist()
+
+        kolom_pilih = st.selectbox("Pilih satu variabel untuk divisualisasikan:", kolom_list)
+
+        if kolom_pilih:
+            fig, ax = plt.subplots(figsize=(8, 4))
+            if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
+                sns.countplot(y=kolom_pilih, data=df, order=df[kolom_pilih].value_counts().index, palette="viridis", ax=ax)
+                ax.set_title(f"Frekuensi Jawaban: {kolom_pilih}")
+            else:
+                df[kolom_pilih].hist(ax=ax, bins=15, color='#b30086')
+                ax.set_title(f"Distribusi Nilai: {kolom_pilih}")
+            st.pyplot(fig)
+
+        st.info("💡 Untuk analisis mendalam (crosstab, insight lanjutan, laporan PDF), gunakan menu **Analisis Lengkap (Berbayar)**.")
 
 # ====== Halaman BERBAYAR ======
 elif menu == "Analisis Lengkap (Berbayar)":
@@ -104,4 +121,3 @@ elif menu == "Analisis Lengkap (Berbayar)":
             st.success("✅ Pengajuan berhasil dikirim! Hasil akan dikirim ke email dalam 1x24 jam.")
         else:
             st.warning("⚠️ Mohon lengkapi semua kolom sebelum mengirim.")
-
