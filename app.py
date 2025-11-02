@@ -202,6 +202,6 @@ elif menu == "Analisis Lengkap (Berbayar)":
 st.markdown("""
     <hr style="border: 0.5px solid #b30086;">
     <div style="text-align: center; color: #6a006a; font-size: 14px; margin-top: 20px;">
-        © 2025 <b>SmartSurvey</b>
+        © 2025 <b>SmartSurvey by Laylaa</b>
     </div>
 """, unsafe_allow_html=True)
