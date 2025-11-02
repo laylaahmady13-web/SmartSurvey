@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# ====== Tampilan Dasar ======
+# ====== Konfigurasi Halaman ======
 st.set_page_config(page_title="SmartSurvey", page_icon="📊", layout="centered")
 
 # ====== Gaya CSS ======
@@ -36,6 +36,7 @@ menu = st.sidebar.radio("Menu Utama", ["Home", "Analisis Cepat (Gratis)", "Anali
 
 # ====== Halaman HOME ======
 if menu == "Home":
+    st.image("logo.png", width=220)
     st.markdown("<div class='main-title'>SmartSurvey</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>Analisis survei otomatis — cepat, mudah, dan profesional</div>", unsafe_allow_html=True)
 
@@ -51,21 +52,21 @@ if menu == "Home":
         st.subheader("Analisis Cepat (Gratis)")
         st.write("""
         - Upload file CSV kamu  
-        - Lihat distribusi jawaban tiap pertanyaan  
+        - Lihat hasil analisis deskriptif & visualisasi langsung di halaman  
         - Cocok untuk uji coba cepat
         """)
 
     with col2:
         st.subheader("Analisis Lengkap (Berbayar)")
         st.write("""
-        - Upload file & beri keterangan analisis  
-        - Hasil lengkap dikirim ke email (visualisasi + laporan profesional)  
-        - Termasuk konsultasi hasil
+        - Upload file dan isi keterangan analisis yang diinginkan  
+        - Hasil lengkap dikirim via email (grafik, insight, & laporan profesional)  
+        - Termasuk konsultasi hasil dengan tim SmartSurvey
         """)
 
     st.markdown("---")
     st.write("📊 **SmartSurvey – Data Anda, Insight Kami.**")
-
+    
 # ====== Halaman GRATIS ======
 elif menu == "Analisis Cepat (Gratis)":
     st.header("Analisis Cepat (Gratis)")
@@ -121,3 +122,11 @@ elif menu == "Analisis Lengkap (Berbayar)":
             st.success("✅ Pengajuan berhasil dikirim! Hasil akan dikirim ke email dalam 1x24 jam.")
         else:
             st.warning("⚠️ Mohon lengkapi semua kolom sebelum mengirim.")
+
+# ====== FOOTER ======
+st.markdown("""
+    <hr style="border: 0.5px solid #b30086;">
+    <div style="text-align: center; color: #6a006a; font-size: 14px; margin-top: 20px;">
+        © 2025 <b>SmartSurvey</b> by Layla Ahmady
+    </div>
+""", unsafe_allow_html=True)
