@@ -1,120 +1,107 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
 
-# Konfigurasi halaman
-st.set_page_config(page_title="Smart Survey", layout="wide")
+# ====== Tampilan Dasar ======
+st.set_page_config(page_title="SmartSurvey", page_icon="📊", layout="centered")
 
-# Styling global
+# ====== Gaya CSS ======
 st.markdown("""
     <style>
-    .stApp { background-color: #ffe6f0; }
-    h1, h2, h3, h4 { color: #b30086; }
-    .center { text-align: center; }
-    .card {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 15px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1rem;
+    [data-testid="stSidebar"] {
+        background-color: #ffe6f2; /* pink lembut */
+    }
+    [data-testid="stSidebar"] * {
+        color: #6a006a; /* teks ungu tua */
+    }
+    .main-title {
+        text-align: center;
+        color: #6a006a;
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .subtitle {
+        text-align: center;
+        color: #b30086;
+        font-size: 18px;
+        margin-bottom: 30px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Header utama
-st.markdown("<h1 class='center'>Smart Survey Dashboard</h1>", unsafe_allow_html=True)
-st.write("Unggah data survei Anda dan pilih jenis analisis yang diinginkan.")
+# ====== Sidebar ======
+menu = st.sidebar.radio("Menu Utama", ["Home", "Analisis Cepat (Gratis)", "Analisis Lengkap (Berbayar)"])
 
-# Tabel perbandingan
-st.subheader("📊 Perbandingan Analisis & Harga")
-price_table = pd.DataFrame({
-    "Jenis Analisis": ["Analisis Cepat (Gratis)", "Analisis Lengkap (Kustom)"],
-    "Harga": ["Gratis (Preview)", "Rp25.000 / survey"],
-    "Fitur Utama": [
-        "Ringkasan statistik + Visualisasi 1 variabel + Preview data mentah",
-        "Analisis mendalam + Crosstab + Laporan PDF via email (manual)"
-    ]
-})
-st.table(price_table)
+# ====== Halaman HOME ======
+if menu == "Home":
+    st.markdown("<div class='main-title'>SmartSurvey</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtitle'>Analisis survei otomatis — cepat, mudah, dan profesional</div>", unsafe_allow_html=True)
 
-# Sidebar
-st.sidebar.title("⚙️ Pengaturan Smart Survey")
-uploaded_file = st.sidebar.file_uploader("Upload File CSV Anda", type="csv")
-analysis_type = st.sidebar.radio(
-    "Pilih Mode Analisis:",
-    ("Analisis Cepat (Gratis)", "Analisis Lengkap (Kustom Berbayar)")
-)
+    st.write("""
+    Selamat datang di **SmartSurvey**, platform analisis data survei berbasis web.  
+    Kami membantu mahasiswa, peneliti, dan pelaku bisnis mendapatkan insight data tanpa harus jago statistik!
 
-# --- Jika file diupload ---
-if uploaded_file:
-    try:
+    ### Pilih layanan sesuai kebutuhanmu:
+    """)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Analisis Cepat (Gratis)")
+        st.write("""
+        - Upload file CSV kamu  
+        - Dapatkan analisis deskriptif & korelasi sederhana langsung di halaman  
+        - Cocok untuk uji coba cepat
+        """)
+
+    with col2:
+        st.subheader("Analisis Lengkap (Berbayar)")
+        st.write("""
+        - Upload file dan beri keterangan analisis  
+        - Hasil lengkap dikirim ke email (dengan visualisasi & laporan profesional)  
+        - Termasuk konsultasi hasil
+        """)
+
+    st.markdown("---")
+    st.write("📊 **SmartSurvey – Data Anda, Insight Kami.**")
+
+# ====== Halaman GRATIS ======
+elif menu == "Analisis Cepat (Gratis)":
+    st.header("Analisis Cepat (Gratis)")
+    st.write("Unggah file CSV Anda untuk melihat hasil analisis otomatis secara langsung.")
+
+    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
+    if uploaded_file:
         df = pd.read_csv(uploaded_file)
-        st.sidebar.success("✅ File berhasil diupload!")
+        st.success("✅ File berhasil diunggah!")
+        st.write("### 🧾 5 Baris Pertama Data")
+        st.dataframe(df.head())
 
-        # --- MODE GRATIS ---
-        if analysis_type == "Analisis Cepat (Gratis)":
-            st.markdown("<h2>Hasil Analisis Cepat (Preview)</h2>", unsafe_allow_html=True)
-            st.info("Analisis otomatis untuk melihat ringkasan dan distribusi dasar dari data Anda.")
+        # Analisis sederhana
+        st.write("### 📊 Statistik Deskriptif")
+        st.dataframe(df.describe(include='all'))
 
-            # Ringkasan Statistik
-            with st.container():
-                st.markdown("<div class='card'>", unsafe_allow_html=True)
-                st.subheader("📈 Ringkasan Statistik")
-                try:
-                    st.dataframe(df.describe(include='all'))
-                except Exception:
-                    st.warning("Tidak dapat menampilkan statistik karena format data tidak sesuai.")
-                st.markdown("</div>", unsafe_allow_html=True)
+        # Korelasi numerik
+        num_df = df.select_dtypes(include=[np.number])
+        if not num_df.empty:
+            st.write("### 🔗 Korelasi antar variabel numerik")
+            st.dataframe(num_df.corr())
+        else:
+            st.info("Tidak ada kolom numerik untuk dihitung korelasinya.")
 
-            # Pilih kolom untuk visualisasi
-            st.markdown("<div class='card'>", unsafe_allow_html=True)
-            st.subheader("📊 Visualisasi Frekuensi")
-            kolom_list = df.columns.tolist()
-            kolom_pilih = st.selectbox("Pilih satu variabel untuk divisualisasikan:", kolom_list)
+# ====== Halaman BERBAYAR ======
+elif menu == "Analisis Lengkap (Berbayar)":
+    st.header("Analisis Lengkap (Berbayar)")
+    st.write("Isi form berikut untuk pengajuan analisis lengkap.")
 
-            if kolom_pilih:
-                fig, ax = plt.subplots(figsize=(8, 4))
-                if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
-                    sns.countplot(y=kolom_pilih, data=df, order=df[kolom_pilih].value_counts().index, palette="viridis", ax=ax)
-                    ax.set_title(f"Frekuensi Jawaban: {kolom_pilih}")
-                else:
-                    df[kolom_pilih].hist(ax=ax, bins=15, color='#b30086')
-                    ax.set_title(f"Distribusi Nilai: {kolom_pilih}")
-                st.pyplot(fig)
-            st.markdown("</div>", unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Upload file CSV Anda", type=["csv"])
+    deskripsi = st.text_area("Deskripsikan analisis yang diinginkan", placeholder="Misal: analisis hubungan antara pola makan dan tingkat stres mahasiswa.")
+    email = st.text_input("Masukkan email Anda untuk pengiriman hasil")
+    bukti_bayar = st.file_uploader("Upload bukti pembayaran (jpg/png/pdf)", type=["jpg", "png", "pdf"])
 
-            st.warning("Untuk analisis mendalam (crosstab, insight lanjutan, laporan PDF), gunakan mode **Analisis Lengkap (Kustom)**.")
+    if st.button("Kirim Pengajuan"):
+        if uploaded_file and deskripsi and email and bukti_bayar:
+            st.success("✅ Pengajuan berhasil dikirim! Hasil akan dikirim ke email dalam 1x24 jam.")
+        else:
+            st.warning("⚠️ Mohon lengkapi semua kolom sebelum mengirim.")
 
-        # --- MODE BERBAYAR ---
-        elif analysis_type == "Analisis Lengkap (Kustom Berbayar)":
-            st.markdown("<h2>📝 Formulir Pengajuan Analisis Kustom</h2>", unsafe_allow_html=True)
-            st.info("Kami akan menganalisis data Anda secara mendalam dan mengirimkan laporan hasil ke email Anda dalam 1x24 jam setelah pembayaran.")
-
-            with st.form(key='form_premium'):
-                st.subheader("📌 Detail Pemesanan")
-                email_user = st.text_input("1️⃣ Email untuk pengiriman hasil")
-                kebutuhan = st.text_area("2️⃣ Jelaskan kebutuhan analisis Anda", 
-                                         help="Contoh: Bandingkan tingkat stres berdasarkan angkatan.")
-                st.markdown("---")
-                st.subheader("Konfirmasi Pembayaran")
-                st.write("Transfer Rp25.000 ke DANA: **0812-xxxx-xxxx a.n. Layla** (contoh).")
-                bukti = st.file_uploader("Upload bukti transfer (gambar/pdf):", type=["jpg", "png", "pdf"])
-                submit = st.form_submit_button("✅ Kirim Pengajuan")
-
-            if submit:
-                if email_user and kebutuhan and bukti:
-                    st.success("🎉 Pengajuan Berhasil!")
-                    st.info(f"Laporan hasil akan dikirim ke **{email_user}** paling lambat dalam 1x24 jam.")
-                    st.write("Terima kasih telah menggunakan Smart Survey Premium 💗")
-                else:
-                    st.error("⚠️ Harap isi semua kolom dan upload bukti pembayaran.")
-
-    except Exception as e:
-        st.error(f"Gagal membaca file: {e}")
-
-else:
-    st.info("📂 Silakan upload file CSV Anda melalui sidebar untuk memulai analisis.")
-
-# Footer
-st.markdown("<br><hr><p style='text-align:center; color:#b30086;'>© 2025 SmartSurvey by Layla Ahmady</p>", unsafe_allow_html=True)
