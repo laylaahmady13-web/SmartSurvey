@@ -142,23 +142,22 @@ elif menu == "Analisis Cepat (Gratis)":
                 
                 # --- Pie Chart (opsional) ---
                 # --- Tambahan: Pie Chart untuk kolom kategori ---
-                if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
-                    st.write("### 🥧 Visualisasi Pie Chart (Opsional)")
-                    pie_data = df[kolom_pilih].value_counts()
-                
-                    fig2, ax2 = plt.subplots(figsize=(3.5, 3.5), dpi=100)  # ✅ lebih kecil & tajam
-                    wedges, texts, autotexts = ax2.pie(
-                        pie_data,
-                        labels=pie_data.index,
+                if kolom_pilih:
+                    data_freq = df[kolom_pilih].value_counts()
+                    fig, ax = plt.subplots(figsize=(5, 5))
+                    wedges, texts, autotexts = ax.pie(
+                        data_freq,
+                        labels=data_freq.index,
                         autopct='%1.1f%%',
                         startangle=90,
-                        colors=plt.cm.Blues(np.linspace(0.3, 0.8, len(pie_data))),
-                        textprops={'fontsize': 8}
+                        colors=plt.cm.Blues(np.linspace(0.3, 0.7, len(data_freq)))
                     )
-                    ax2.axis('equal')
-                    plt.setp(autotexts, size=8, weight="bold", color="white")
-                    st.pyplot(fig2)
-                    st.caption("Persentase responden untuk setiap kategori jawaban.")
+                    # Buat jadi donut
+                    centre_circle = plt.Circle((0,0), 0.70, fc='white')
+                    fig.gca().add_artist(centre_circle)
+                    ax.axis('equal')
+                    st.pyplot(fig)
+
 
 
         except Exception as e:
