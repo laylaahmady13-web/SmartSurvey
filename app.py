@@ -81,7 +81,7 @@ menu = st.sidebar.radio("Menu Utama", ["Home", "Analisis Cepat (Gratis)", "Anali
 
 # ====== HOME ======
 if menu == "Home":
-    st.image("https://github.com/laylaahmady13-web/SmartSurvey/blob/main/Logo%20SmartSurvey.png?raw=true", width=230)
+    st.image("https://raw.githubusercontent.com/laylaahmady13-web/SmartSurvey/main/Logo%20SmartSurvey.png", width=230)
     st.markdown("<div class='main-title'>SmartSurvey</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>Analisis survei otomatis — cepat, mudah, dan profesional</div>", unsafe_allow_html=True)
 
