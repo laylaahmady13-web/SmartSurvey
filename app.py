@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 # ====== Fungsi Visualisasi ======
 @st.cache_data
@@ -149,7 +150,7 @@ elif menu == "Analisis Cepat (Gratis)":
                         labels=pie_data.index,
                         autopct='%1.1f%%',
                         startangle=90,
-                        colors=plt.cm.Blues.colors
+                        colors=plt.cm.Blues(np.linspace(0.2, 0.8, len(pie_data)))
                     )
                     ax2.axis('equal')
                     st.pyplot(fig2)
