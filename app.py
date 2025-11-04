@@ -152,7 +152,7 @@ elif menu == "Analisis Lengkap (Berbayar)":
         <div class='price-box'>
             <h4>💰 Biaya Layanan: Rp 25.000 / Survei</h4>
             <p>Untuk konfirmasi pembayaran, silakan hubungi kami melalui Instagram:</p>
-            <p><a href="https://instagram.com/smartsurvey.id" target="_blank">@smartsurvey.id</a></p>
+            <p><a href="https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==" target="_blank">@smart.survey1</a></p>
         </div>
     """, unsafe_allow_html=True)
     
@@ -173,6 +173,6 @@ elif menu == "Analisis Lengkap (Berbayar)":
 # ====== FOOTER ======
 st.markdown("""
     <div class='footer'>
-        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smartsurvey.id</a>
+        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smart.survey1</a>
     </div>
 """, unsafe_allow_html=True)
