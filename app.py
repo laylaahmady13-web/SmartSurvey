@@ -141,20 +141,24 @@ elif menu == "Analisis Cepat (Gratis)":
                 st.pyplot(fig)
                 
                 # --- Pie Chart (opsional) ---
+                # --- Tambahan: Pie Chart untuk kolom kategori ---
                 if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
-                    st.write("### 🥧 Visualisasi Pie Chart")
+                    st.write("### 🥧 Visualisasi Pie Chart (Opsional)")
                     pie_data = df[kolom_pilih].value_counts()
-                    fig2, ax2 = plt.subplots()
+                
+                    fig2, ax2 = plt.subplots(figsize=(5, 5))  # <== ukuran lebih kecil
                     ax2.pie(
                         pie_data,
                         labels=pie_data.index,
                         autopct='%1.1f%%',
                         startangle=90,
-                        colors=plt.cm.Blues(np.linspace(0.2, 0.8, len(pie_data)))
+                        colors=plt.cm.Blues(np.linspace(0.3, 0.9, len(pie_data))),  # gradasi biru lembut
+                        textprops={'fontsize': 10}  # ukuran teks lebih kecil
                     )
-                    ax2.axis('equal')
+                    ax2.axis('equal')  # biar pie-nya bulat sempurna
                     st.pyplot(fig2)
                     st.caption("Persentase responden untuk setiap kategori jawaban.")
+
 
         except Exception as e:
             st.error(f"⚠️ Terjadi error saat membaca file: {e}")
