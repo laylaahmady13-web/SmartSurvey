@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import io
 
 # ====== Fungsi Visualisasi ======
 @st.cache_data
@@ -130,18 +129,19 @@ elif menu == "Analisis Cepat (Gratis)":
                 st.write("Statistik Deskriptif:")
                 st.dataframe(df.describe(include='all'))
 
-            st.write("### 📈 Visualisasi Frekuensi")
+            st.write("### 📊 Visualisasi Data")
             skip_keywords = ["cap waktu", "timestamp", "nama", "nim", "npm", "email", "asal instansi"]
             kolom_list = [c for c in df.columns if not any(k.lower() in c.lower() for k in skip_keywords)]
             kolom_pilih = st.selectbox("Pilih kolom:", kolom_list)
+
             if kolom_pilih:
                 # --- Bar Chart / Histogram Otomatis ---
                 fig = plot_frequency(df, kolom_pilih)
                 st.pyplot(fig)
-            
-                # --- Tambahan: Pie Chart untuk kolom kategori ---
+                
+                # --- Pie Chart (opsional) ---
                 if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
-                    st.write("### 🥧 Visualisasi Pie Chart (Opsional)")
+                    st.write("### 🥧 Visualisasi Pie Chart")
                     pie_data = df[kolom_pilih].value_counts()
                     fig2, ax2 = plt.subplots()
                     ax2.pie(
@@ -153,9 +153,12 @@ elif menu == "Analisis Cepat (Gratis)":
                     )
                     ax2.axis('equal')
                     st.pyplot(fig2)
-                    st.markdown("<br>", unsafe_allow_html=True)
                     st.caption("Persentase responden untuk setiap kategori jawaban.")
 
+        except Exception as e:
+            st.error(f"⚠️ Terjadi error saat membaca file: {e}")
+
+    st.info("Butuh analisis lengkap dan laporan PDF? Pilih **Analisis Lengkap (Berbayar)** di sidebar.")
 
 # ====== ANALISIS LENGKAP ======
 elif menu == "Analisis Lengkap (Berbayar)":
@@ -187,6 +190,7 @@ elif menu == "Analisis Lengkap (Berbayar)":
 # ====== FOOTER ======
 st.markdown("""
     <div class='footer'>
-        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smart.survey1</a>
+        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via 
+        <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smart.survey1</a>
     </div>
 """, unsafe_allow_html=True)
