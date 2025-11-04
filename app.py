@@ -139,24 +139,7 @@ elif menu == "Analisis Cepat (Gratis)":
                 # --- Bar Chart / Histogram Otomatis ---
                 fig = plot_frequency(df, kolom_pilih)
                 st.pyplot(fig)
-                
-                # --- Pie Chart (opsional) ---
-                # --- Tambahan: Pie Chart untuk kolom kategori ---
-                if kolom_pilih:
-                    data_freq = df[kolom_pilih].value_counts()
-                    fig, ax = plt.subplots(figsize=(5, 5))
-                    wedges, texts, autotexts = ax.pie(
-                        data_freq,
-                        labels=data_freq.index,
-                        autopct='%1.1f%%',
-                        startangle=90,
-                        colors=plt.cm.Blues(np.linspace(0.3, 0.7, len(data_freq)))
-                    )
-                    # Buat jadi donut
-                    centre_circle = plt.Circle((0,0), 0.70, fc='white')
-                    fig.gca().add_artist(centre_circle)
-                    ax.axis('equal')
-                    st.pyplot(fig)
+
 
 
 
