@@ -135,13 +135,27 @@ elif menu == "Analisis Cepat (Gratis)":
             kolom_list = [c for c in df.columns if not any(k.lower() in c.lower() for k in skip_keywords)]
             kolom_pilih = st.selectbox("Pilih kolom:", kolom_list)
             if kolom_pilih:
+                # --- Bar Chart / Histogram Otomatis ---
                 fig = plot_frequency(df, kolom_pilih)
                 st.pyplot(fig)
+            
+                # --- Tambahan: Pie Chart untuk kolom kategori ---
+                if df[kolom_pilih].dtype == 'object' or df[kolom_pilih].nunique() < 20:
+                    st.write("### 🥧 Visualisasi Pie Chart (Opsional)")
+                    pie_data = df[kolom_pilih].value_counts()
+                    fig2, ax2 = plt.subplots()
+                    ax2.pie(
+                        pie_data,
+                        labels=pie_data.index,
+                        autopct='%1.1f%%',
+                        startangle=90,
+                        colors=plt.cm.Blues.colors
+                    )
+                    ax2.axis('equal')
+                    st.pyplot(fig2)
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    st.caption("Persentase responden untuk setiap kategori jawaban.")
 
-        except Exception as e:
-            st.error(f"⚠️ Terjadi error saat membaca file: {e}")
-
-    st.info("Butuh analisis lengkap dan laporan PDF? Pilih **Analisis Lengkap (Berbayar)** di sidebar.")
 
 # ====== ANALISIS LENGKAP ======
 elif menu == "Analisis Lengkap (Berbayar)":
