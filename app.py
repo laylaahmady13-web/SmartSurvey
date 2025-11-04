@@ -146,16 +146,17 @@ elif menu == "Analisis Cepat (Gratis)":
                     st.write("### 🥧 Visualisasi Pie Chart (Opsional)")
                     pie_data = df[kolom_pilih].value_counts()
                 
-                    fig2, ax2 = plt.subplots(figsize=(5, 5))  # <== ukuran lebih kecil
-                    ax2.pie(
+                    fig2, ax2 = plt.subplots(figsize=(3.5, 3.5), dpi=100)  # ✅ lebih kecil & tajam
+                    wedges, texts, autotexts = ax2.pie(
                         pie_data,
                         labels=pie_data.index,
                         autopct='%1.1f%%',
                         startangle=90,
-                        colors=plt.cm.Blues(np.linspace(0.3, 0.9, len(pie_data))),  # gradasi biru lembut
-                        textprops={'fontsize': 10}  # ukuran teks lebih kecil
+                        colors=plt.cm.Blues(np.linspace(0.3, 0.8, len(pie_data))),
+                        textprops={'fontsize': 8}
                     )
-                    ax2.axis('equal')  # biar pie-nya bulat sempurna
+                    ax2.axis('equal')
+                    plt.setp(autotexts, size=8, weight="bold", color="white")
                     st.pyplot(fig2)
                     st.caption("Persentase responden untuk setiap kategori jawaban.")
 
