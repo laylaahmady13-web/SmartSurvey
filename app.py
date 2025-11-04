@@ -86,8 +86,8 @@ if menu == "Home":
     st.markdown("<div class='subtitle'>Analisis survei otomatis — cepat, mudah, dan profesional</div>", unsafe_allow_html=True)
 
     st.write("""
-    Selamat datang di **SmartSurvey** 💡  
-    Platform analisis survei yang membantu mahasiswa dan pelaku usaha memahami data dengan cepat dan efisien.
+    Selamat datang di **SmartSurvey**  
+    Platform analisis survei yang membantu mahasiswa, peneliti muda, dan pelaku usaha memahami data dengan cepat dan efisien.
 
     Pilih layanan sesuai kebutuhan Anda 👇
     """)
@@ -96,7 +96,7 @@ if menu == "Home":
     with col1:
         st.markdown("""
         <div style='background-color:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;'>
-        <h3>📊 Analisis Cepat (Gratis)</h3>
+        <h3>Analisis Cepat (Gratis)</h3>
         <p>Upload data survei Anda dan lihat ringkasan serta visualisasi otomatis secara instan.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -104,9 +104,9 @@ if menu == "Home":
     with col2:
         st.markdown("""
         <div style='background-color:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;'>
-        <h3>💼 Analisis Lengkap (Berbayar)</h3>
+        <h3>Analisis Lengkap (Berbayar)</h3>
         <p>Analisis kustom mendalam + laporan PDF profesional.  
-        Cocok untuk skripsi dan penelitian.</p>
+        Cocok untuk tugas, proyek, dan penelitian.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -115,7 +115,7 @@ if menu == "Home":
 
 # ====== ANALISIS CEPAT ======
 elif menu == "Analisis Cepat (Gratis)":
-    st.header("🎯 Analisis Cepat (Gratis)")
+    st.header("Analisis Cepat (Gratis)")
     st.write("Unggah file CSV Anda untuk melihat hasil analisis otomatis. **Data Anda tidak akan disimpan.**")
 
     uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
@@ -145,7 +145,7 @@ elif menu == "Analisis Cepat (Gratis)":
 
 # ====== ANALISIS LENGKAP ======
 elif menu == "Analisis Lengkap (Berbayar)":
-    st.header("💼 Analisis Lengkap (Jasa Kustom)")
+    st.header("Analisis Lengkap (Jasa Kustom)")
     st.write("Layanan analisis mendalam dengan hasil laporan PDF profesional. Konfirmasi pembayaran dilakukan via Instagram kami.")
 
     st.markdown("""
@@ -162,7 +162,7 @@ elif menu == "Analisis Lengkap (Berbayar)":
         email_user = st.text_input("2️⃣ Email untuk hasil laporan")
         kebutuhan = st.text_area("3️⃣ Jelaskan kebutuhan analisis Anda")
         bukti = st.file_uploader("4️⃣ Upload bukti transfer (opsional)", type=["jpg", "png", "pdf"])
-        submit = st.form_submit_button("Kirim Pengajuan 📤")
+        submit = st.form_submit_button("Kirim Pengajuan")
 
     if submit:
         if email_user and kebutuhan and uploaded_file:
@@ -173,6 +173,6 @@ elif menu == "Analisis Lengkap (Berbayar)":
 # ====== FOOTER ======
 st.markdown("""
     <div class='footer'>
-        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via <a href='https://instagram.com/smartsurvey.id' target='_blank'>@smartsurvey.id</a>
+        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smartsurvey.id</a>
     </div>
 """, unsafe_allow_html=True)
