@@ -122,7 +122,7 @@ st.markdown("""
 
 
 # ========================== SECTION: LAYANAN ==========================
-st.markdown("<h2 id='layanan'>Pilihan Layanan</h2>", unsafe_allow_html=True)
+st.markdown("<h2 id='layanan'>✨ Pilihan Layanan</h2>", unsafe_allow_html=True)
 
 st.markdown("""
 <div class="card-container">
@@ -177,7 +177,7 @@ st.markdown("""
 
 
 # ========================== ANALISIS CEPAT SECTION ==========================
-st.markdown("##Analisis Cepat (Gratis)")
+st.markdown("## Analisis Cepat (Gratis)")
 st.write("Upload file CSV untuk melihat visualisasi otomatis.")
 
 upload = st.file_uploader("Upload file CSV", type=["csv"])
@@ -211,7 +211,7 @@ if upload:
 
 
 # ========================== ANALISIS BERBAYAR SECTION ==========================
-st.markdown("##Analisis Lengkap (Berbayar)")
+st.markdown("## Analisis Lengkap (Berbayar)")
 
 st.write("Gunakan tombol di bawah untuk pemesanan atau konsultasi:")
 
