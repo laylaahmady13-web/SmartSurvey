@@ -2,183 +2,186 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
 
-# ====== Fungsi Visualisasi ======
-@st.cache_data
-def plot_frequency(df, column):
-    """Membuat Bar Chart/Histogram berdasarkan tipe data kolom."""
-    fig, ax = plt.subplots(figsize=(8, 4))
-    if df[column].dtype == 'object' or df[column].nunique() < 20:
-        sns.countplot(y=column, data=df,
-                      order=df[column].value_counts().index,
-                      palette="Blues", ax=ax)
-        ax.set_title(f"Frekuensi Jawaban: {column}", fontsize=14)
-        ax.set_xlabel("Jumlah Responden")
-        ax.set_ylabel("")
-    else:
-        df[column].hist(ax=ax, bins=15, color='#007acc')
-        ax.set_title(f"Distribusi Nilai: {column}", fontsize=14)
-        ax.set_xlabel(column)
-        ax.set_ylabel("Frekuensi")
-    plt.tight_layout()
-    return fig
+# ========================== CONFIG ==============================
+st.set_page_config(
+    page_title="SmartSurvey",
+    page_icon="📊",
+    layout="wide"
+)
 
-# ====== Konfigurasi Halaman ======
-st.set_page_config(page_title="SmartSurvey", page_icon="📊", layout="wide")
-
-# ====== Gaya CSS (Soft Blue Tema Profesional) ======
+# ========================== CUSTOM CSS ==========================
 st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
-    body { font-family: 'Poppins', sans-serif; }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #e6f0ff 0%, #f0f6ff 100%);
-        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-    }
-    [data-testid="stSidebar"] * {
-        color: #003366;
-    }
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
+}
 
-    .main-title {
-        text-align: center;
-        color: #004080;
-        font-size: 36px;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-    .subtitle {
-        text-align: center;
-        color: #007acc;
-        font-size: 18px;
-        margin-bottom: 30px;
-    }
+.hero-box {
+    background: linear-gradient(135deg, #dceaff 0%, #bcd8ff 100%);
+    padding: 50px;
+    border-radius: 25px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+}
 
-    .price-box {
-        background: linear-gradient(135deg, #e6f2ff 0%, #cce6ff 100%);
-        padding: 20px; 
-        border-radius: 15px; 
-        border-left: 5px solid #007acc;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+.hero-title {
+    font-size: 48px;
+    font-weight: 600;
+    color: #003f7f;
+    margin-bottom: 10px;
+}
 
-    .footer {
-        text-align: center;
-        color: #004080;
-        font-size: 14px;
-        margin-top: 40px;
-        padding: 10px;
-        background: #e6f0ff;
-        border-radius: 10px;
-    }
-    </style>
+.hero-sub {
+    font-size: 20px;
+    color: #0059b3;
+    margin-bottom: 25px;
+}
+
+.motto {
+    font-size: 18px;
+    font-style: italic;
+    color: #003566;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.07);
+    transition: 0.2s;
+    border-left: 6px solid #4d9bf7;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.button-primary {
+    background-color: #4d9bf7;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.button-primary:hover {
+    background-color: #1d7bea;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 10px;
+    color: #003566;
+    font-size: 14px;
+}
+</style>
 """, unsafe_allow_html=True)
 
-# ====== Sidebar ======
-menu = st.sidebar.radio("Menu Utama", ["Home", "Analisis Cepat (Gratis)", "Analisis Lengkap (Berbayar)"])
 
-# ====== HOME ======
-if menu == "Home":
-    st.image("https://raw.githubusercontent.com/laylaahmady13-web/SmartSurvey/main/Logo%20SmartSurvey.png", width=230)
-    st.markdown("<div class='main-title'>SmartSurvey</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtitle'>Cepat, Mudah, dan Profesional</div>", unsafe_allow_html=True)
+# ========================== HERO SECTION ==========================
+st.markdown("""
+<div class="hero-box">
+    <img src="https://raw.githubusercontent.com/laylaahmady13-web/SmartSurvey/main/Logo%20SmartSurvey.png" 
+         width="150">
 
-    st.write("""
-    Selamat datang di **SmartSurvey**  
-    Platform analisis survei yang membantu mahasiswa, peneliti muda, dan pelaku usaha memahami data dengan cepat dan efisien.
+    <div class="hero-title">SmartSurvey</div>
+    <div class="hero-sub">Layanan Survei & Analisis Data Digital</div>
+    <div class="motto">“Kamu fokus di tugasnya, kami bereskan datanya.”</div>
 
-    Pilih layanan sesuai kebutuhan Anda 👇
-    """)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        <div style='background-color:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;'>
-        <h3>Analisis Cepat (Gratis)</h3>
-        <p>Upload data survei Anda dan lihat ringkasan serta visualisasi otomatis secara instan.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("""
-        <div style='background-color:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;'>
-        <h3>Analisis Lengkap (Berbayar)</h3>
-        <p>Analisis kustom mendalam + laporan PDF profesional.  
-        Cocok untuk tugas, proyek, dan penelitian.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("---")
-    st.info("Gunakan menu di **Sidebar kiri** untuk memulai analisis.")
-
-# ====== ANALISIS CEPAT ======
-elif menu == "Analisis Cepat (Gratis)":
-    st.header("Analisis Cepat (Gratis)")
-    st.write("Unggah file CSV Anda untuk melihat hasil analisis otomatis. **Data Anda tidak akan disimpan.**")
-
-    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
-    if uploaded_file:
-        try:
-            df = pd.read_csv(uploaded_file)
-            st.success("✅ File berhasil diunggah!")
-
-            with st.expander("🧾 Pratinjau Data", expanded=True):
-                st.write("5 Baris Pertama:")
-                st.dataframe(df.head())
-                st.write("Statistik Deskriptif:")
-                st.dataframe(df.describe(include='all'))
-
-            st.write("### 📊 Visualisasi Data")
-            skip_keywords = ["cap waktu", "timestamp", "nama", "nim", "npm", "email", "asal instansi"]
-            kolom_list = [c for c in df.columns if not any(k.lower() in c.lower() for k in skip_keywords)]
-            kolom_pilih = st.selectbox("Pilih kolom:", kolom_list)
-
-            if kolom_pilih:
-                # --- Bar Chart / Histogram Otomatis ---
-                fig = plot_frequency(df, kolom_pilih)
-                st.pyplot(fig)
+    <a class="button-primary" href="#layanan">Lihat Layanan</a>
+</div>
+""", unsafe_allow_html=True)
 
 
 
+# ========================== SECTION: LAYANAN ==========================
+st.markdown("<h2 id='layanan'>✨ Pilihan Layanan</h2>", unsafe_allow_html=True)
 
-        except Exception as e:
-            st.error(f"⚠️ Terjadi error saat membaca file: {e}")
+col1, col2 = st.columns(2)
 
-    st.info("Butuh analisis lengkap dan laporan PDF? Pilih **Analisis Lengkap (Berbayar)** di sidebar.")
-
-# ====== ANALISIS LENGKAP ======
-elif menu == "Analisis Lengkap (Berbayar)":
-    st.header("Analisis Lengkap (Jasa Kustom)")
-    st.write("Layanan analisis mendalam dengan hasil laporan PDF profesional. Konfirmasi pembayaran dilakukan via Instagram kami.")
-
+with col1:
     st.markdown("""
-        <div class='price-box'>
-            <h4>💰 Biaya Layanan: Rp 25.000 / Survei</h4>
-            <p>Untuk konfirmasi pembayaran, silakan hubungi kami melalui Instagram:</p>
-            <p><a href="https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==" target="_blank">@smart.survey1</a></p>
+        <div class="card">
+            <h3>📊 Analisis Cepat (Gratis)</h3>
+            <p>Cek data survei secara otomatis: statistik deskriptif & grafik instan.</p>
         </div>
     """, unsafe_allow_html=True)
     
-    with st.form(key='form_premium'):
-        st.subheader("📝 Form Pengajuan Analisis")
-        uploaded_file = st.file_uploader("1️⃣ Upload file CSV Anda", type=["csv"])
-        email_user = st.text_input("2️⃣ Email untuk hasil laporan")
-        kebutuhan = st.text_area("3️⃣ Jelaskan kebutuhan analisis Anda")
-        bukti = st.file_uploader("4️⃣ Upload bukti transfer (opsional)", type=["jpg", "png", "pdf"])
-        submit = st.form_submit_button("Kirim Pengajuan")
+with col2:
+    st.markdown("""
+        <div class="card">
+            <h3>📝 Analisis Lengkap (Berbayar)</h3>
+            <p>Analisis mendalam + laporan PDF profesional, sesuai kebutuhan.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-    if submit:
-        if email_user and kebutuhan and uploaded_file:
-            st.success(f"✅ Pengajuan berhasil dikirim! Hasil akan dikirim ke {email_user} dalam 1x24 jam.")
-        else:
-            st.error("⚠️ Lengkapi semua kolom terlebih dahulu.")
+st.write("")
 
-# ====== FOOTER ======
+
+# ========================== ANALISIS CEPAT SECTION ==========================
+st.markdown("## 📊 Analisis Cepat (Gratis)")
+st.write("Upload file CSV untuk melihat visualisasi otomatis.")
+
+upload = st.file_uploader("Upload file CSV", type=["csv"])
+
+if upload:
+    try:
+        df = pd.read_csv(upload)
+        st.success("File berhasil diunggah!")
+
+        st.subheader("Pratinjau Data")
+        st.dataframe(df.head())
+
+        st.subheader("Statistik Deskriptif")
+        st.dataframe(df.describe(include="all"))
+
+        # ========================= Grafik =========================
+        def plot_col(df, col):
+            fig, ax = plt.subplots(figsize=(7, 4))
+            if df[col].dtype == 'object' or df[col].nunique() < 20:
+                sns.countplot(y=col, data=df, ax=ax)
+            else:
+                df[col].hist(ax=ax, bins=15)
+            return fig
+        
+        pilih = st.selectbox("Pilih kolom untuk visualisasi", df.columns)
+
+        if pilih:
+            st.pyplot(plot_col(df, pilih))
+
+    except Exception as e:
+        st.error(f"Terjadi error: {e}")
+
+
+
+# ========================== ANALISIS BERBAYAR SECTION ==========================
+st.markdown("## 📝 Analisis Lengkap (Berbayar)")
+st.write("Klik tombol di bawah untuk pemesanan:")
+
+colA, colB = st.columns(2)
+
+with colA:
+    st.markdown(
+        f"<a class='button-primary' href='https://forms.gle/4GyXEF9xYGp78PXN7' target='_blank'>📄 Isi Form Pemesanan</a>",
+        unsafe_allow_html=True,
+    )
+
+with colB:
+    st.markdown(
+        f"<a class='button-primary' href='https://api.whatsapp.com/send/?phone=62895604820884&text=Halo%20SmartSurvey%2C%20saya%20ingin%20konsultasi%20layanan%20analisis.&type=phone_number&app_absent=0' target='_blank'>💬 Chat WhatsApp</a>",
+        unsafe_allow_html=True,
+    )
+
+# ========================== FOOTER ==========================
 st.markdown("""
-    <div class='footer'>
-        © 2025 <b>SmartSurvey by Layla Ahmady</b> | Konfirmasi via 
-        <a href='https://www.instagram.com/smart.survey1?igsh=MWY0MHRrNzNqcDh6dw==' target='_blank'>@smart.survey1</a>
-    </div>
+<div class="footer">
+© 2025 SmartSurvey by Layla Ahmady
+</div>
 """, unsafe_allow_html=True)
