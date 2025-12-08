@@ -218,29 +218,72 @@ if upload:
         # -------------------------------------------------------------
         
         def plot_col(df, col):
-            is_categorical = (df[col].dtype == 'object') or (df[col].nunique() < 20)
+            # Cek apakah kolom adalah datetime (Cap waktu)
+            try:
+                if pd.api.types.is_datetime64_any_dtype(df[col]):
+                    # Jika datetime, kita buat kolom baru: Jam (Hour)
+                    df['Jam Survei'] = df[col].dt.hour
+                    col_to_plot = 'Jam Survei'
+                    st.subheader(f"Frekuensi Berdasarkan {col_to_plot}")
+                    
+                    fig, ax = plt.subplots(figsize=(10, 5))
+                    # Gunakan Bar Plot biasa, bukan Countplot, untuk mengontrol sumbu X
+                    df[col_to_plot].value_counts().sort_index().plot(kind='bar', ax=ax, color='#4d9bf7')
+                    ax.set_title(f'Distribusi Pengisian Survei berdasarkan Jam (0-23)')
+                    ax.set_xlabel("Jam")
+                    ax.set_ylabel("Frekuensi")
+                    plt.xticks(rotation=0)
+                    st.pyplot(fig)
+                    
+                    # Hapus kolom sementara
+                    df.drop(columns=['Jam Survei'], inplace=True)
+                    return
+        
+            except Exception:
+                # Jika bukan datetime, lanjutkan ke pemrosesan kategori/numerik
+                pass
+        
+            # Logika Kategori/Numerik
+            is_categorical = (df[col].dtype == 'object') or (df[col].nunique() <= 20 and df[col].nunique() > 1)
             
             if is_categorical:
                 # Visualisasi untuk data Kategorikal/Diskrit (Countplot)
                 st.subheader(f"Frekuensi {col}")
-                fig, ax = plt.subplots(figsize=(7, 4))
-                sns.countplot(y=col, data=df, ax=ax, order=df[col].value_counts().index, palette="viridis")
-                ax.set_title(f'Distribusi {col}')
-                st.pyplot(fig)
-            else:
-                # Visualisasi untuk data Numerik/Kontinu (Histogram)
-                st.subheader(f"Distribusi {col} (Histogram)")
-                fig_hist, ax_hist = plt.subplots(figsize=(7, 4))
-                df[col].hist(ax=ax_hist, bins=15, color='#4d9bf7', edgecolor='black')
-                ax_hist.set_title(f'Histogram {col}')
-                st.pyplot(fig_hist)
                 
-                # Tambahan Box Plot
-                st.subheader(f"Distribusi {col} (Box Plot)")
-                fig_box, ax_box = plt.subplots(figsize=(7, 2))
-                sns.boxplot(x=df[col], ax=ax_box, color='lightcoral')
-                ax_box.set_title(f'Box Plot {col}')
-                st.pyplot(fig_box)
+                # Logika: Jika terlalu banyak kategori, tampilkan vertikal
+                if df[col].nunique() > 10:
+                    figsize = (10, max(5, df[col].nunique() * 0.4)) # Ukuran figure dinamis
+                    fig, ax = plt.subplots(figsize=figsize)
+                    sns.countplot(y=col, data=df, ax=ax, order=df[col].value_counts().index, palette="viridis")
+                    ax.set_title(f'Distribusi {col}')
+                    plt.tight_layout() # Mencegah label tumpang tindih
+                    st.pyplot(fig)
+                else:
+                    # Standar Bar Chart Vertikal (untuk kategori sedikit)
+                    fig, ax = plt.subplots(figsize=(10, 5))
+                    sns.countplot(x=col, data=df, ax=ax, order=df[col].value_counts().index, palette="viridis")
+                    ax.set_title(f'Distribusi {col}')
+                    plt.xticks(rotation=45, ha='right') # Putar label X untuk kategori
+                    st.pyplot(fig)
+        
+            else:
+                # Visualisasi untuk data Numerik/Kontinu (Histogram & Boxplot)
+                if df[col].dtype == 'number':
+                    st.subheader(f"Distribusi {col} (Histogram)")
+                    fig_hist, ax_hist = plt.subplots(figsize=(7, 4))
+                    df[col].hist(ax=ax_hist, bins=15, color='#4d9bf7', edgecolor='black')
+                    ax_hist.set_title(f'Histogram {col}')
+                    st.pyplot(fig_hist)
+                    
+                    # Tambahan Box Plot
+                    st.subheader(f"Distribusi {col} (Box Plot)")
+                    fig_box, ax_box = plt.subplots(figsize=(7, 2))
+                    sns.boxplot(x=df[col], ax=ax_box, color='lightcoral')
+                    ax_box.set_title(f'Box Plot {col}')
+                    st.pyplot(fig_box)
+                else:
+                     # Jika ada kolom object dengan banyak unique values (> 20) yang tidak cocok untuk countplot
+                    st.info(f"Kolom '{col}' memiliki terlalu banyak nilai unik ({df[col].nunique()}). Visualisasi Countplot tidak disarankan.")
         
         # -------------------------------------------------------------
         
