@@ -121,59 +121,60 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ========================== SECTION: LAYANAN (FIXED) ==========================
+# ========================== SECTION: LAYANAN (FIXED INDENTATION) ==========================
 st.markdown("<h2 id='layanan'>✨ Pilihan Layanan</h2>", unsafe_allow_html=True)
 
+# Perhatian: Semua tag HTML di bawah ini DILARANG memiliki spasi/tab di awal baris
 st.markdown("""
 <div class="card-container">
 
-    <div class="card">
-        <div class="card-title">Template Survei Dasar</div>
-        <div class="card-price">Rp 15.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Template Survei Dasar</div>
+<div class="card-price">Rp 15.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Template Survei Lengkap</div>
-        <div class="card-price">Rp 25.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Template Survei Lengkap</div>
+<div class="card-price">Rp 25.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Uji Validitas</div>
-        <div class="card-price">Rp 15.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Uji Validitas</div>
+<div class="card-price">Rp 15.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Uji Reliabilitas</div>
-        <div class="card-price">Rp 15.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Uji Reliabilitas</div>
+<div class="card-price">Rp 15.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Paket Hemat (Validitas + Reliabilitas)</div>
-        <div class="card-price">Rp 25.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Paket Hemat (Validitas + Reliabilitas)</div>
+<div class="card-price">Rp 25.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Analisis Dasar Premium</div>
-        <div class="card-price">Rp 25.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Analisis Dasar Premium</div>
+<div class="card-price">Rp 25.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Uji t / ANOVA / Chi-square</div>
-        <div class="card-price">Rp 30.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Uji t / ANOVA / Chi-square</div>
+<div class="card-price">Rp 30.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Regresi / Korelasi / Logistik</div>
-        <div class="card-price">Rp 35.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Regresi / Korelasi / Logistik</div>
+<div class="card-price">Rp 35.000</div>
+</div>
 
-    <div class="card">
-        <div class="card-title">Paket Laporan PDF Lengkap</div>
-        <div class="card-price">Rp 40.000 – Rp 60.000</div>
-    </div>
+<div class="card">
+<div class="card-title">Paket Laporan PDF Lengkap</div>
+<div class="card-price">Rp 40.000 – Rp 60.000</div>
+</div>
 
 </div>
-""", unsafe_allow_html=True) # <-- PENAMBAHAN 'unsafe_allow_html=True' di sini
+""", unsafe_allow_html=True)
 
 
 # ========================== ANALISIS CEPAT SECTION ==========================
@@ -246,7 +247,7 @@ if upload:
         pilih = st.selectbox("Pilih kolom untuk visualisasi", df.columns)
 
         if pilih:
-            plot_col(df, pilih) # Menggunakan fungsi plot_col yang baru
+            plot_col(df, pilih) 
 
     except Exception as e:
         st.error(f"Terjadi error saat memproses data: Pastikan format CSV sudah benar. Error: {e}")
