@@ -121,7 +121,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ========================== SECTION: LAYANAN ==========================
+# ========================== SECTION: LAYANAN (FIXED) ==========================
 st.markdown("<h2 id='layanan'>✨ Pilihan Layanan</h2>", unsafe_allow_html=True)
 
 st.markdown("""
@@ -173,7 +173,7 @@ st.markdown("""
     </div>
 
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True) # <-- PENAMBAHAN 'unsafe_allow_html=True' di sini
 
 
 # ========================== ANALISIS CEPAT SECTION ==========================
@@ -192,22 +192,64 @@ if upload:
 
         st.subheader("Statistik Deskriptif")
         st.dataframe(df.describe(include="all"))
+        
+        # -------------------------------------------------------------
+        # FITUR BARU 1: BAR CHART NILAI HILANG (MISSING VALUES)
+        # -------------------------------------------------------------
+        st.subheader("Analisis Nilai Hilang (Missing Values)")
+        missing_values = df.isnull().sum().sort_values(ascending=False)
+        missing_values = missing_values[missing_values > 0]
 
+        if missing_values.empty:
+            st.info("🎉 Data Anda bersih! Tidak ditemukan nilai yang hilang.")
+        else:
+            fig_miss, ax_miss = plt.subplots(figsize=(10, 5))
+            sns.barplot(x=missing_values.index, y=missing_values.values, ax=ax_miss, palette="Blues_d")
+                
+            plt.xticks(rotation=45, ha='right')
+            ax_miss.set_ylabel("Jumlah Nilai Hilang")
+            ax_miss.set_xlabel("Kolom")
+            ax_miss.set_title("Jumlah Nilai Hilang per Kolom")
+            st.pyplot(fig_miss)
+            
+        # -------------------------------------------------------------
+        # FITUR BARU 2: FUNGSI PLOT KOLOM DENGAN BOX PLOT & HISTOGRAM
+        # -------------------------------------------------------------
+        
         def plot_col(df, col):
-            fig, ax = plt.subplots(figsize=(7, 4))
-            if df[col].dtype == 'object' or df[col].nunique() < 20:
-                sns.countplot(y=col, data=df, ax=ax)
+            is_categorical = (df[col].dtype == 'object') or (df[col].nunique() < 20)
+            
+            if is_categorical:
+                # Visualisasi untuk data Kategorikal/Diskrit (Countplot)
+                st.subheader(f"Frekuensi {col}")
+                fig, ax = plt.subplots(figsize=(7, 4))
+                sns.countplot(y=col, data=df, ax=ax, order=df[col].value_counts().index, palette="viridis")
+                ax.set_title(f'Distribusi {col}')
+                st.pyplot(fig)
             else:
-                df[col].hist(ax=ax, bins=15)
-            return fig
+                # Visualisasi untuk data Numerik/Kontinu (Histogram)
+                st.subheader(f"Distribusi {col} (Histogram)")
+                fig_hist, ax_hist = plt.subplots(figsize=(7, 4))
+                df[col].hist(ax=ax_hist, bins=15, color='#4d9bf7', edgecolor='black')
+                ax_hist.set_title(f'Histogram {col}')
+                st.pyplot(fig_hist)
+                
+                # Tambahan Box Plot
+                st.subheader(f"Distribusi {col} (Box Plot)")
+                fig_box, ax_box = plt.subplots(figsize=(7, 2))
+                sns.boxplot(x=df[col], ax=ax_box, color='lightcoral')
+                ax_box.set_title(f'Box Plot {col}')
+                st.pyplot(fig_box)
+        
+        # -------------------------------------------------------------
         
         pilih = st.selectbox("Pilih kolom untuk visualisasi", df.columns)
 
         if pilih:
-            st.pyplot(plot_col(df, pilih))
+            plot_col(df, pilih) # Menggunakan fungsi plot_col yang baru
 
     except Exception as e:
-        st.error(f"Terjadi error: {e}")
+        st.error(f"Terjadi error saat memproses data: Pastikan format CSV sudah benar. Error: {e}")
 
 
 # ========================== ANALISIS BERBAYAR SECTION ==========================
