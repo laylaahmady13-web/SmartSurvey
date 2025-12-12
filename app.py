@@ -159,18 +159,23 @@ st.markdown("""
 </div>
 
 <div class="card">
-<div class="card-title">Uji t / ANOVA / Chi-square</div>
+<div class="card-title">Paket Uji Asumsi Regresi</div>
 <div class="card-price">Rp 30.000</div>
 </div>
 
 <div class="card">
-<div class="card-title">Regresi / Korelasi / Logistik</div>
+<div class="card-title">Ujii F dan Uji T</div>
+<div class="card-price">Rp 30.000</div>
+</div>
+
+<div class="card">
+<div class="card-title">Uji yang diperlukan</div>
 <div class="card-price">Rp 35.000</div>
 </div>
 
 <div class="card">
-<div class="card-title">Paket Laporan PDF Lengkap</div>
-<div class="card-price">Rp 40.000 – Rp 60.000</div>
+<div class="card-title">Custom Laporan PDF</div>
+<div class="card-price">Rp 5.000 – Rp 10.000</div>
 </div>
 
 </div>
