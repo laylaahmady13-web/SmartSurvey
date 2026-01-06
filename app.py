@@ -111,7 +111,7 @@ html, body, [class*="css"] {
 # ========================== HERO SECTION ==========================
 st.markdown("""
 <div class="hero-box">
-    <img src="https://raw.githubusercontent.com/laylaahmady13-web/SmartSurvey/main/Logo%20SmartSurvey.png" width="150">
+    <img src="https://raw.githubusercontent.com/laylaahmady13-web/SmartSurvey/main/biru%20modern%20huruf%20LM%20logo.png" width="150">
     <div class="hero-title">SmartSurvey</div>
     <div class="hero-sub">Layanan Survei & Analisis Data Digital</div>
     <div class="motto">“Kamu fokus di tugasnya, kami bereskan datanya.”</div>
